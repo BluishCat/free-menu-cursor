@@ -5,6 +5,7 @@
 #include "MenuUIStrings.h"
 
 #include <array>
+#include <limits>
 
 namespace FMC
 {
@@ -25,6 +26,9 @@ namespace FMC
 		using ComboFunction = bool(*)(const char*, int*, const char* const[], int, int);
 		using InputIntFunction = bool(*)(const char*, int*, int, int, int);
 		using ButtonFunction = bool(*)(const char*, const ImVec2);
+		using PushTextWrapPosFunction = void(*)(float);
+		using PopTextWrapPosFunction = void(*)();
+		using SetNextItemWidthFunction = void(*)(float);
 
 		struct FrameworkAPI
 		{
@@ -36,6 +40,10 @@ namespace FMC
 			ComboFunction combo{};
 			InputIntFunction inputInt{};
 			ButtonFunction button{};
+			// optional (older Framework builds may lack them): text wrapping and widget width
+			PushTextWrapPosFunction pushTextWrapPos{};
+			PopTextWrapPosFunction popTextWrapPos{};
+			SetNextItemWidthFunction setNextItemWidth{};
 		};
 
 		FrameworkAPI g_api;
@@ -60,14 +68,32 @@ namespace FMC
 			g_api.combo = Resolve<ComboFunction>(module, "igCombo_Str_arr");
 			g_api.inputInt = Resolve<InputIntFunction>(module, "igInputInt");
 			g_api.button = Resolve<ButtonFunction>(module, "igButton");
+			g_api.pushTextWrapPos = Resolve<PushTextWrapPosFunction>(module, "igPushTextWrapPos");
+			g_api.popTextWrapPos = Resolve<PopTextWrapPosFunction>(module, "igPopTextWrapPos");
+			g_api.setNextItemWidth = Resolve<SetNextItemWidthFunction>(module, "igSetNextItemWidth");
 
 			return g_api.addSectionItem && g_api.textUnformatted && g_api.separator && g_api.checkbox &&
 			       g_api.sliderFloat && g_api.combo && g_api.inputInt && g_api.button;
 		}
 
+		// Wraps at the window edge (long Japanese/English sentences otherwise run off the page)
 		void Text(const char* a_text)
 		{
+			const bool wrap = g_api.pushTextWrapPos && g_api.popTextWrapPos;
+			if (wrap)
+				g_api.pushTextWrapPos(0.0f);
 			g_api.textUnformatted(a_text, nullptr);
+			if (wrap)
+				g_api.popTextWrapPos();
+		}
+
+		// ImGui draws widget labels on one line to the right of the widget, where long labels
+		// get cut off. Draw the label as wrapped text above, and the widget at full width.
+		void LabelAbove(const char* a_label)
+		{
+			Text(a_label);
+			if (g_api.setNextItemWidth)
+				g_api.setNextItemWidth(-std::numeric_limits<float>::min());
 		}
 
 		void Separator()
@@ -80,9 +106,11 @@ namespace FMC
 			return g_api.checkbox(a_label, &a_value);
 		}
 
-		bool Combo(const char* a_label, int& a_value, const char* const* a_items, int a_count)
+		// a_id: hidden ImGui id ("##..."), the visible label is drawn above
+		bool Combo(const char* a_label, const char* a_id, int& a_value, const char* const* a_items, int a_count)
 		{
-			return g_api.combo(a_label, &a_value, a_items, a_count, -1);
+			LabelAbove(a_label);
+			return g_api.combo(a_id, &a_value, a_items, a_count, -1);
 		}
 
 		bool Button(const char* a_label)
@@ -143,14 +171,14 @@ namespace FMC
 			if (Checkbox(t.flickSupport, g_page.draft.flick)) g_page.dirty = true;
 			if (Checkbox(t.blockFreeCursorKey, g_page.draft.blockFreeCursorKey)) g_page.dirty = true;
 			if (Checkbox(t.debugLog, g_page.draft.debugLog)) g_page.dirty = true;
-			if (Combo(t.language, g_page.draft.language, t.languageModes, static_cast<int>(std::size(t.languageModes))))
+			if (Combo(t.language, "##fmcLanguage", g_page.draft.language, t.languageModes, static_cast<int>(std::size(t.languageModes))))
 				g_page.dirty = true;
 			if (g_page.draft.language != g_registeredLanguage)
 				Text(t.languageRestartNote);
 
 			Separator();
 			Text(t.syncSection);
-			if (Combo(t.vanillaSync, g_page.draft.vanillaSyncMode, t.syncModes,
+			if (Combo(t.vanillaSync, "##fmcVanillaSync", g_page.draft.vanillaSyncMode, t.syncModes,
 				static_cast<int>(std::size(t.syncModes))))
 				g_page.dirty = true;
 			if (Checkbox(t.flickSync, g_page.draft.flickSync)) g_page.dirty = true;
@@ -162,18 +190,18 @@ namespace FMC
 			Text(t.mouseSection);
 			if (Checkbox(t.relaxMouse, g_page.draft.relaxMouse)) g_page.dirty = true;
 			Text(t.pointerNote);
-			if (g_api.sliderFloat(t.pointerSpeed, &g_page.draft.menuCursorSpeed, 0.1f, 4.0f, "%.2fx", 0))
+			LabelAbove(t.pointerSpeed);
+			if (g_api.sliderFloat("##fmcPointerSpeed", &g_page.draft.menuCursorSpeed, 0.1f, 4.0f, "%.2fx", 0))
 				g_page.dirty = true;
 			int precisionChoice = g_page.draft.menuPointerPrecision + 1;
-			if (Combo(t.pointerPrecision, precisionChoice, t.precisionModes,
+			if (Combo(t.pointerPrecision, "##fmcPrecision", precisionChoice, t.precisionModes,
 				static_cast<int>(std::size(t.precisionModes)))) {
 				g_page.draft.menuPointerPrecision = precisionChoice - 1;
 				g_page.dirty = true;
 			}
 
 			Separator();
-			Text(t.hotkeyDescription);
-			if (Combo(t.hotkeyLabel, g_page.hotkeyChoice, t.hotkeyNames,
+			if (Combo(t.hotkeyDescription, "##fmcHotkey", g_page.hotkeyChoice, t.hotkeyNames,
 				static_cast<int>(std::size(t.hotkeyNames))) &&
 			    g_page.hotkeyChoice < kCustomHotkey) {
 				g_page.draft.freeCursorKey = kHotkeyCodes[g_page.hotkeyChoice];
@@ -181,7 +209,8 @@ namespace FMC
 			}
 			if (g_page.hotkeyChoice == kCustomHotkey) {
 				Text(t.customHotkeyHelp);
-				if (g_api.inputInt(t.customDIKCode, &g_page.draft.freeCursorKey, 1, 10, 0)) {
+				LabelAbove(t.customDIKCode);
+				if (g_api.inputInt("##fmcDIK", &g_page.draft.freeCursorKey, 1, 10, 0)) {
 					g_page.draft.freeCursorKey = std::clamp(g_page.draft.freeCursorKey, 0, 0xFF);
 					g_page.dirty = true;
 				}
