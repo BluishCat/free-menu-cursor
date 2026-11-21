@@ -4,6 +4,11 @@
 
 An SKSE plugin for Skyrim Special Edition / Anniversary Edition. While a menu cursor is on screen, the Windows cursor is no longer locked inside the game window, so you can move it to another monitor or another app (a browser, a wiki, Discord) without Alt+Tab.
 
+## Screenshot
+Settings page in SKSE Menu Framework:
+
+![Settings page (English)](docs/images/setting_image_en.png)
+
 ## Features
 - Frees the cursor in **vanilla menus**, **SKSE Menu Framework**, and **FLICK**.
 - Keeps the in-game cursor on the Windows cursor, so it doesn't jump when you come back.
@@ -63,7 +68,9 @@ Requirements: Visual Studio 2022 (MSVC x64), CMake 3.21+, Ninja (bundled with VS
    ```
    Output: `build/release/Free Menu Cursor.dll` and `Free Menu Cursor Restore.exe`.
 
-Tests (no game needed): `testsun_ui_strings_test.bat`, `testsun_settings_test.bat`.
+Tests (no game needed): `tests
+un_ui_strings_test.bat`, `tests
+un_settings_test.bat`.
 
 ## License
 GPL-3.0-or-later (required by CommonLibSSE-NG, which this plugin links statically). See `LICENSE` and `THIRD_PARTY_NOTICES.txt`.

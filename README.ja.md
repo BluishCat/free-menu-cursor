@@ -4,6 +4,11 @@
 
 Skyrim Special Edition／Anniversary Edition用のSKSEプラグインです。メニューのカーソルが出ている間は、Windowsのカーソルがゲームウィンドウの中に閉じ込められなくなります。Alt+Tabを使わずに、別のモニターや別のアプリ（ブラウザ、Wiki、Discordなど）へマウスを動かせます。
 
+## スクリーンショット
+SKSE Menu Frameworkの設定画面：
+
+![設定画面（日本語）](docs/images/setting_image_jp.png)
+
 ## 機能
 - **バニラのメニュー**、**SKSE Menu Framework**、**FLICK**でカーソルを解放します。
 - ゲーム内のカーソルをWindowsのカーソルに追従させるので、ゲームに戻ったときに位置がずれません。
@@ -63,7 +68,9 @@ SKSE/Plugins/Free Menu Cursor/THIRD_PARTY_NOTICES.txt
    ```
    `build/release/`に`Free Menu Cursor.dll`と`Free Menu Cursor Restore.exe`ができます。
 
-テスト（ゲーム不要）：`testsun_ui_strings_test.bat`、`testsun_settings_test.bat`
+テスト（ゲーム不要）：`tests
+un_ui_strings_test.bat`、`tests
+un_settings_test.bat`
 
 ## ライセンス
 GPL-3.0-or-later です（このプラグインが静的リンクしているCommonLibSSE-NGのライセンスに合わせる必要があるため）。`LICENSE`と`THIRD_PARTY_NOTICES.txt`を参照してください。
