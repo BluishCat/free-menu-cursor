@@ -1,0 +1,45 @@
+[size=5][b]Free Menu Cursor[/b][/size]
+
+メニューを開いている間、マウスをSkyrimの外へ動かせるようにします。Alt+Tabを使わずに、別のモニターやブラウザ、Wiki、Discordを操作できます。
+
+[size=4][b]機能[/b][/size]
+[list]
+[*][b]バニラのメニュー[/b]、[b]SKSE Menu Framework[/b]、[b]FLICK[/b]でWindowsのカーソルを解放します
+[*]ゲーム内のカーソルがWindowsのカーソルに追従するので、戻ったときに位置がずれません
+[*][b]フリーカーソルキー[/b]（既定は右Ctrl）：押している間はメニューなしでもカーソルを解放します。押したままウィンドウの外へ出すと、ゲームをクリックするまで解放されたままになります
+[*]メニュー中だけポインター速度や加速を変更できます（任意・既定は無効）
+[*]SKSE Menu Frameworkの設定ページ（英語／日本語）、またはINIで設定できます
+[/list]
+
+[size=4][b]必要なもの[/b][/size]
+[list]
+[*]SKSE64
+[*]Address Library for SKSE Plugins
+[*]任意：SKSE Menu Framework、FLICK
+[/list]
+
+[size=4][b]対応状況[/b][/size]
+[list]
+[*]SE 1.5.97、AE 1.6.1170、AE 1.7.104で動作確認済み
+[*][b]Skyrim VRには対応していません[/b]
+[*]SSE Display Tweaksのカーソル固定と併用できます
+[*]バニラのメニューを伴わずに表示されるImGuiのオーバーレイはまだ検出できません。その場合はフリーカーソルキーを使ってください
+[/list]
+
+[size=4][b]Windowsのポインター設定について[/b][/size]
+カーソルが解放されている間、メニューのカーソルはWindowsのカーソルに追従するので、Windowsのポインター速度で動きます。[b]fMenuCursorSpeed[/b]と[b]iMenuPointerPrecision[/b]で、メニュー中だけ速度と加速を変更できます。[b]どちらも既定では無効です。[/b] 有効にした場合：
+[list]
+[*]変更は一時的なもので、Windowsの設定には保存されません
+[*]メニューを閉じたとき、ゲームがフォーカスを失ったとき、ゲームを終了したときに元に戻ります
+[*]ゲームがクラッシュしても、同梱の「Free Menu Cursor Restore.exe」が設定を元に戻します。これはこの設定を有効にしたときだけ起動する小さな補助プログラムで、ソースも公開しています。次回起動時にも確認します
+[/list]
+
+[size=4][b]インストール[/b][/size]
+MODマネージャーでインストールしてください。0.1.x（「FreeMenuCursor」）を使っていた場合は先に削除し、設定を引き継ぐなら古いFreeMenuCursor.iniを「Free Menu Cursor.ini」に名前を変えてください。
+
+[size=4][b]不具合の報告[/b][/size]
+bDebugLog=1にして問題を再現し、[b]ゲームを起動し直す前に[/b][i]Documents\My Games\Skyrim Special Edition\SKSE\Free Menu Cursor.log[/i]を添付してください（クラッシュした場合はcrash-*.logも）。ログは起動するたびに上書きされます。
+
+[size=4][b]ソースとライセンス[/b][/size]
+ソース：[url=https://github.com/BluishCat/free-menu-cursor]GitHub[/url]
+GPL-3.0-or-later。CommonLibSSE-NGを使ってビルドしています。サードパーティーのライセンス表記はダウンロードファイルに同梱しています。

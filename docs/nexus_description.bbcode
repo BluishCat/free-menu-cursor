@@ -1,0 +1,45 @@
+[size=5][b]Free Menu Cursor[/b][/size]
+
+Move your mouse out of Skyrim while a menu is open, to another monitor, a browser, a wiki or Discord, without Alt+Tab.
+
+[size=4][b]Features[/b][/size]
+[list]
+[*]Frees the Windows cursor in [b]vanilla menus[/b], [b]SKSE Menu Framework[/b] and [b]FLICK[/b]
+[*]The in-game cursor stays on the Windows cursor, so it doesn't jump when you come back
+[*][b]Free-cursor key[/b] (default Right Ctrl). Hold it to free the cursor without a menu. Leave the window while holding it, and the cursor stays free until you click the game
+[*]Optional menu-only pointer speed and acceleration (off by default)
+[*]In-game settings page in SKSE Menu Framework (English / Japanese), or edit the INI
+[/list]
+
+[size=4][b]Requirements[/b][/size]
+[list]
+[*]SKSE64
+[*]Address Library for SKSE Plugins
+[*]Optional: SKSE Menu Framework, FLICK
+[/list]
+
+[size=4][b]Compatibility[/b][/size]
+[list]
+[*]Tested on SE 1.5.97, AE 1.6.1170 and AE 1.7.104
+[*][b]Skyrim VR is not supported[/b]
+[*]Works with SSE Display Tweaks' cursor lock
+[*]ImGui overlays that show without a vanilla menu are not detected yet. Use the free-cursor key for those
+[/list]
+
+[size=4][b]About the Windows pointer options[/b][/size]
+While the cursor is free, the menu cursor follows the Windows cursor, so it moves at your Windows pointer speed. [b]fMenuCursorSpeed[/b] and [b]iMenuPointerPrecision[/b] can change the speed and acceleration for menus only. [b]They are off by default.[/b] When you turn them on:
+[list]
+[*]The change is temporary and never saved to your Windows settings
+[*]It is restored when the menu closes, when the game loses focus, and when the game exits
+[*]If the game crashes, the included "Free Menu Cursor Restore.exe" restores your settings. It is a tiny helper started only when one of these options is on, and its source is public. The next launch also checks
+[/list]
+
+[size=4][b]Installation[/b][/size]
+Install with a mod manager. If you used 0.1.x ("FreeMenuCursor"), remove it first, and rename your old FreeMenuCursor.ini to "Free Menu Cursor.ini" to keep your settings.
+
+[size=4][b]Reporting bugs[/b][/size]
+Set bDebugLog=1, reproduce the problem, then attach [i]Documents\My Games\Skyrim Special Edition\SKSE\Free Menu Cursor.log[/i] (and crash-*.log if the game crashed) [b]before launching the game again[/b], because the log is overwritten on each launch.
+
+[size=4][b]Source & License[/b][/size]
+Source: [url=https://github.com/BluishCat/free-menu-cursor]GitHub[/url]
+GPL-3.0-or-later. Built with CommonLibSSE-NG; third-party notices are included in the download.
